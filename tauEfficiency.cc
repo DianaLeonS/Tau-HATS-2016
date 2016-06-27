@@ -69,16 +69,22 @@ int main(int argc, char** argv) {
 
 			MC4Momentum.SetPtEtaPhiM(mcPt->at(imc),mcEta->at(imc),mcPhi->at(imc),mcMass->at(imc));
 
-			bool Select_GenTau= abs(mcPID->at(imc))==15&&MC4Momentum.DeltaR(Tau4Momentum) < 0.2; 
+			bool Select_GenTau= abs(mcPID->at(imc))==15  &&  MC4Momentum.DeltaR(Tau4Momentum) < 0.2;
 
 			if (!Select_GenTau) continue;
+            
+            
+            //----------------------------------------------------------------------------------------------------------------------------------------
+            //  Tau Id Performance Study
+            //----------------------------------------------------------------------------------------------------------------------------------------
+            bool tauAntiEleAntiMu= tauByMVA6LooseElectronRejection->at(itau) > 0.5 && tauByTightMuonRejection3->at(itau) > 0.5;
 
             // Fill Denumerator
-			if (TauPtCut && TauPreSelection)
+			if (TauPtCut && TauPreSelection && tauAntiEleAntiMu)
 				histoDenominator->Fill(tauPt->at(itau));
             
             // Fill Numerator
-			if (TauPtCut && TauPreSelection && taupfTausDiscriminationByDecayModeFindingNewDMs->at(itau) > 0.5 &&  tauByLooseCombinedIsolationDeltaBetaCorr3Hits->at(itau) > 0.5 && tauByMVA6LooseElectronRejection->at(itau) > 0.5 && tauByTightMuonRejection3->at(itau) > 0.5 )
+			if (TauPtCut && TauPreSelection && tauAntiEleAntiMu   && taupfTausDiscriminationByDecayModeFindingNewDMs->at(itau) > 0.5 &&  tauByLooseCombinedIsolationDeltaBetaCorr3Hits->at(itau) > 0.5 )
 				histoNumeratorLoose->Fill(tauPt->at(itau));
 
 			break; //Exit the tau loop, a match was found!

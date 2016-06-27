@@ -70,7 +70,7 @@ int main(int argc, char** argv) {
         fflush(stdout);
         
         
-        if  ( not ( (HLTEleMuX >> 29 & 1) == 1 || (HLTEleMuX >> 30 & 1) == 1 ) ) continue;  // SingleMu trigger requirement
+        if  ( not ( (HLTEleMuX >> 24 & 1)  )) continue;  // SingleMu trigger requirement  "HLT_IsoMu24_eta2p1"
         
         
         TLorentzVector Mu4Momentum, Tau4Momentum;
@@ -80,7 +80,7 @@ int main(int argc, char** argv) {
             
             
             //Muon kinematics
-            if (muPt->at(imu) < 20)  continue;  // Check muon pt
+            if (muPt->at(imu) < 25)  continue;  // Check muon pt
             if (fabs(muEta->at(imu)) > 2.1)  continue ;  // Check muon eta
             if (muIsMediumID->at(imu) < 0.5) continue ;  // Check muon Id
             if (fabs(muD0->at(imu)) > 0.045 || fabs(muDz->at(imu)) > 0.2 ) continue;  // Check muon impact parameter
@@ -89,7 +89,7 @@ int main(int argc, char** argv) {
             float IsoMu=muPFChIso->at(imu)/muPt->at(imu);
             if ( (muPFNeuIso->at(imu) + muPFPhoIso->at(imu) - 0.5* muPFPUIso->at(imu) )  > 0.0)
                 IsoMu= ( muPFChIso->at(imu)/muPt->at(imu) + muPFNeuIso->at(imu) + muPFPhoIso->at(imu) - 0.5* muPFPUIso->at(imu))/muPt->at(imu);
-            if (IsoMu > 0.1) continue;  // Check muon Isolation
+            if (IsoMu > 0.15) continue;  // Check muon Isolation
             
             
             // Muon-MET transverse Mass
@@ -111,13 +111,15 @@ int main(int argc, char** argv) {
                 if (Mu4Momentum.DeltaR(Tau4Momentum) < 0.5) continue ;
                 
                 //----------------------------------------------------------------------------------------------------------------------------------------
-                //  Tau Id Performance Study
+                //  Tau Fake Rate Performance Study
                 //----------------------------------------------------------------------------------------------------------------------------------------
                 
+                bool tauAntiEleAntiMu= tauByMVA6LooseElectronRejection->at(itau) > 0.5 && tauByTightMuonRejection3->at(itau) > 0.5;
                 // Fill Denominator
+                if (tauAntiEleAntiMu) // Tau candidate should not be electron or muon
                 histoDenominator->Fill(tauPt->at(itau));
                 
-                if (taupfTausDiscriminationByDecayModeFindingNewDMs->at(itau) > 0.5 &&  tauByLooseCombinedIsolationDeltaBetaCorr3Hits->at(itau) > 0.5 && tauByMVA6LooseElectronRejection->at(itau) > 0.5 && tauByTightMuonRejection3->at(itau) > 0.5 ){
+                if (taupfTausDiscriminationByDecayModeFindingNewDMs->at(itau) > 0.5 &&  tauByLooseCombinedIsolationDeltaBetaCorr3Hits->at(itau) > 0.5 && tauAntiEleAntiMu ){
                     
                 // Fill Numerator
                 histoNumeratorLoose->Fill(tauPt->at(itau));
