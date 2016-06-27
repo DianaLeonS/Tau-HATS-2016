@@ -34,6 +34,8 @@ int main(int argc, char** argv) {
     Run_Tree->SetBranchAddress("tauDxy",&tauDxy);
     Run_Tree->SetBranchAddress("tauByTightMuonRejection3", &tauByTightMuonRejection3);
     Run_Tree->SetBranchAddress("tauByMVA6LooseElectronRejection", &tauByMVA6LooseElectronRejection);
+    Run_Tree->SetBranchAddress("taupfTausDiscriminationByDecayModeFinding",&taupfTausDiscriminationByDecayModeFinding);
+    Run_Tree->SetBranchAddress("taupfTausDiscriminationByDecayModeFindingNewDMs",&taupfTausDiscriminationByDecayModeFindingNewDMs);
     Run_Tree->SetBranchAddress("tauByLooseCombinedIsolationDeltaBetaCorr3Hits",&tauByLooseCombinedIsolationDeltaBetaCorr3Hits);
     Run_Tree->SetBranchAddress("tauByMediumCombinedIsolationDeltaBetaCorr3Hits",&tauByMediumCombinedIsolationDeltaBetaCorr3Hits);
     Run_Tree->SetBranchAddress("tauByTightCombinedIsolationDeltaBetaCorr3Hits",&tauByTightCombinedIsolationDeltaBetaCorr3Hits);
@@ -108,17 +110,21 @@ int main(int argc, char** argv) {
                 
                 if (Mu4Momentum.DeltaR(Tau4Momentum) < 0.5) continue ;
                 
-                if (tauByTightMuonRejection3->at(itau) < 0.5) continue;
-                if (tauByMVA6LooseElectronRejection->at(itau) < 0.5) continue;
-                
+                //----------------------------------------------------------------------------------------------------------------------------------------
+                //  Tau Id Performance Study
+                //----------------------------------------------------------------------------------------------------------------------------------------
                 
                 // Fill Denominator
                 histoDenominator->Fill(tauPt->at(itau));
                 
-                if (tauByLooseCombinedIsolationDeltaBetaCorr3Hits->at(itau) < 0.5)  continue;
+                if (taupfTausDiscriminationByDecayModeFindingNewDMs->at(itau) > 0.5 &&  tauByLooseCombinedIsolationDeltaBetaCorr3Hits->at(itau) > 0.5 && tauByMVA6LooseElectronRejection->at(itau) > 0.5 && tauByTightMuonRejection3->at(itau) > 0.5 ){
+                    
                 // Fill Numerator
                 histoNumeratorLoose->Fill(tauPt->at(itau));
+                    
+                // Fill Tau Decay Modes
                 histTauDecayModeLoose->Fill(tauDecayMode->at(itau));
+                }
                 
                 
             }

@@ -12,8 +12,8 @@ import array
 
 
 
-Binning_PT = array.array("d",[0,20,25,30,35,40,50,60,75,95,120,150,200])
-OutFile=TFile("OutPutFR-NewDM.root")
+Binning_PT = array.array("d",[0,20,25,30,40,55,75,95,120,150,200,300])
+OutFile=TFile("outputEfficiency-NewDM.root")
 
 HistoNum=OutFile.Get("histoNumeratorLoose")
 HistoNum= HistoNum.Rebin(len(Binning_PT)-1,"",Binning_PT)
@@ -21,18 +21,18 @@ HistoNum= HistoNum.Rebin(len(Binning_PT)-1,"",Binning_PT)
 HistoDeNum=OutFile.Get("histoDenominator")
 HistoDeNum= HistoDeNum.Rebin(len(Binning_PT)-1,"",Binning_PT)
 
-fakeRate=ROOT.TGraphAsymmErrors(HistoNum, HistoDeNum, "")
+tauEffi=ROOT.TGraphAsymmErrors(HistoNum, HistoDeNum, "")
 
 canv = TCanvas("canv", "histograms", 0, 0, 600, 600)
-canv.SetLogy()
-fakeRate.SetMinimum(0.5)
-fakeRate.GetXaxis().SetRangeUser(0,200)
-fakeRate.GetXaxis().SetTitle("#tau p_{T} [GeV]")
-fakeRate.GetYaxis().SetRangeUser(0.001,1)
-fakeRate.SetTitle('Jet to Tau Fake Rate')
-fakeRate.SetMarkerStyle(20)
+
+tauEffi.SetMinimum(0.5)
+tauEffi.GetXaxis().SetRangeUser(0,300)
+tauEffi.GetXaxis().SetTitle("Reconstructed #tau p_{T} [GeV]")
+tauEffi.GetYaxis().SetRangeUser(0,1)
+tauEffi.SetTitle('Tau Efficiency')
+tauEffi.SetMarkerStyle(20)
 
 
-fakeRate.Draw()
+tauEffi.Draw()
 
-canv.SaveAs("jetToTauFR-NewDM.pdf")
+canv.SaveAs("tauEfficiency-NewDM.pdf")
