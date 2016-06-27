@@ -14,6 +14,7 @@ import array
 
 Binning_PT = array.array("d",[0,20,25,30,35,40,50,60,75,95,120,150,200])
 OutFile=TFile("OutPutFR-NewDM.root")
+OutName = "jetToTauFR-NewDM"
 
 HistoNum=OutFile.Get("histoNumeratorLoose")
 HistoNum= HistoNum.Rebin(len(Binning_PT)-1,"",Binning_PT)
@@ -25,7 +26,7 @@ fakeRate=ROOT.TGraphAsymmErrors(HistoNum, HistoDeNum, "")
 
 canv = TCanvas("canv", "histograms", 0, 0, 600, 600)
 canv.SetLogy()
-fakeRate.SetMinimum(0.5)
+fakeRate.SetMinimum(0.0)
 fakeRate.GetXaxis().SetRangeUser(0,200)
 fakeRate.GetXaxis().SetTitle("#tau p_{T} [GeV]")
 fakeRate.GetYaxis().SetRangeUser(0.001,1)
@@ -35,4 +36,9 @@ fakeRate.SetMarkerStyle(20)
 
 fakeRate.Draw()
 
-canv.SaveAs("jetToTauFR-NewDM.pdf")
+canv.SaveAs("%s.pdf" %OutName)
+oFile = ROOT.TFile("%s.root" %OutName, "recreate")
+oFile.cd()
+fakeRate.SetName(OutName)
+fakeRate.Write()
+oFile.Close()

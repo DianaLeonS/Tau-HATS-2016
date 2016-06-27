@@ -13,7 +13,8 @@ import array
 
 
 Binning_PT = array.array("d",[0,20,25,30,40,55,75,95,120,150,200,300])
-OutFile=TFile("outputEfficiency-NewDM.root")
+OutFile=TFile("outputEfficiency.root")
+OutName = "tauEfficiency-NewDM"
 
 HistoNum=OutFile.Get("histoNumeratorLoose")
 HistoNum= HistoNum.Rebin(len(Binning_PT)-1,"",Binning_PT)
@@ -35,4 +36,9 @@ tauEffi.SetMarkerStyle(20)
 
 tauEffi.Draw()
 
-canv.SaveAs("tauEfficiency-NewDM.pdf")
+canv.SaveAs("%s.pdf" %OutName)
+oFile = ROOT.TFile("%s.root" %OutName, "recreate")
+oFile.cd()
+tauEffi.SetName(OutName)
+tauEffi.Write()
+oFile.Close()
