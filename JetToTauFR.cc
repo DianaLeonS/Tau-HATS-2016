@@ -70,7 +70,7 @@ int main(int argc, char** argv) {
         fflush(stdout);
         
         
-        if  ( not ( (HLTEleMuX >> 24 & 1)  )) continue;  // SingleMu trigger requirement  "HLT_IsoMu24_eta2p1"
+        if  ( not ( (HLTEleMuX >> 30 & 1) || (HLTEleMuX >> 29 & 1))) continue;  // SingleMu trigger requirement  "HLT_IsoMu24_eta2p1"
         
         
         TLorentzVector Mu4Momentum, Tau4Momentum;
@@ -123,7 +123,7 @@ int main(int argc, char** argv) {
                     
                 // Fill Numerator
                 histoNumeratorLoose->Fill(tauPt->at(itau));
-                    
+
                 // Fill Tau Decay Modes
                 histTauDecayModeLoose->Fill(tauDecayMode->at(itau));
                 }
